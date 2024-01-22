@@ -35,30 +35,45 @@ impl Display for VerificationLevel {
 }
 
 /// The error returned by the World App.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize, thiserror::Error)]
 #[serde(rename_all = "snake_case")]
 pub enum AppError {
 	/// Failed to connect to the World App. Please create a new session and try again.
+	#[error("Failed to connect to the World App. Please create a new session and try again.")]
 	ConnectionFailed,
 	/// The user rejected the verification request in the World App.
+	#[error("The user rejected the verification request in the World App.")]
 	VerificationRejected,
 	/// The user already verified the maximum number of times for this action.
+	#[error("The user already verified the maximum number of times for this action.")]
 	MaxVerificationsReached,
 	/// The user does not have the verification level required by this app.
+	#[error("The user does not have the verification level required by this app.")]
 	CredentialUnavailable,
 	/// There was a problem with this request. Please try again or contact the app owner.
+	#[error("There was a problem with this request. Please try again or contact the app owner.")]
 	MalformedRequest,
 	/// Invalid network. If you are the app owner, visit docs.worldcoin.org/test for details.
+	#[error(
+		"Invalid network. If you are the app owner, visit docs.worldcoin.org/test for details."
+	)]
 	InvalidNetwork,
 	/// There was an issue fetching the user's credential. Please try again.
+	#[error("There was an issue fetching the user's credential. Please try again.")]
 	InclusionProofFailed,
 	/// The user's identity is still being registered. Please wait a few minutes and try again.
+	#[error(
+		"The user's identity is still being registered. Please wait a few minutes and try again."
+	)]
 	InclusionProofPending,
 	/// Unexpected response from the user's World App. Please try again.
+	#[error("Unexpected response from the user's World App. Please try again.")]
 	UnexpectedResponse,
 	/// Verification failed by the app. Please contact the app owner for details.
+	#[error("Verification failed by the app. Please contact the app owner for details.")]
 	FailedByHostApp,
 	/// Something unexpected went wrong. Please try again.
+	#[error("Something unexpected went wrong. Please try again.")]
 	GenericError,
 }
 
