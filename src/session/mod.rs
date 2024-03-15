@@ -240,15 +240,12 @@ impl Session {
 	fn verification_level_to_credential_types(verification_level: VerificationLevel) -> Vec<CredentialType> {
 		if verification_level == VerificationLevel::Device {
 			return vec![
-				// format!("{}", CredentialType::Orb),
-				// format!("{}", CredentialType::Device),
 				CredentialType::Orb,
 				CredentialType::Device,
 			]
 		}
 		else { 
 			return vec![
-				// format!("{}", CredentialType::Orb),
 				CredentialType::Orb,
 			]
 		}
