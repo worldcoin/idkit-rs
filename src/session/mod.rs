@@ -115,6 +115,7 @@ impl Session {
 					"action": action,
 					"action_description": action_description,
 					"signal": format!("0x{:x}", encode_signal(&signal)),
+					"credential_types": Self::verification_level_to_credential_types(verification_level),
 					"verification_level": verification_level.to_string(),
 				}),
 			)?)
@@ -234,5 +235,22 @@ impl Session {
 			.map_err(|_| Error::Encryption("Failed to decrypt bridge response"))?;
 
 		Ok(serde_json::from_slice(payload)?)
+	}
+
+	fn verification_level_to_credential_types(verification_level: VerificationLevel) -> Vec<CredentialType> {
+		if verification_level == VerificationLevel::Device {
+			return vec![
+				// format!("{}", CredentialType::Orb),
+				// format!("{}", CredentialType::Device),
+				CredentialType::Orb,
+				CredentialType::Device,
+			]
+		}
+		else { 
+			return vec![
+				// format!("{}", CredentialType::Orb),
+				CredentialType::Orb,
+			]
+		}
 	}
 }

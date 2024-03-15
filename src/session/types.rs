@@ -11,6 +11,15 @@ pub enum CredentialType {
 	Device,
 }
 
+impl Display for CredentialType {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Self::Orb => write!(f, "orb"),
+			Self::Device => write!(f, "device"),
+		}
+	}
+}
+
 /// The minimum verification level accepted.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "lowercase")]

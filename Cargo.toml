@@ -2,7 +2,7 @@
 name = "idkit"
 edition = "2021"
 license = "MIT"
-version = "0.1.0"
+version = "0.1.1"
 readme = "README.md"
 authors = ["Miguel Piedrafita <rust@miguel.build>"]
 repository = "https://github.com/worldcoin/idkit-rs"
