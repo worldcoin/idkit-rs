@@ -115,6 +115,7 @@ impl Session {
 					"action": action,
 					"action_description": action_description,
 					"signal": format!("0x{:x}", encode_signal(&signal)),
+					"credential_types": verification_level.to_credential_types(),
 					"verification_level": verification_level.to_string(),
 				}),
 			)?)
