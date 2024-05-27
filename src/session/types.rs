@@ -35,7 +35,7 @@ impl Display for VerificationLevel {
 }
 
 impl VerificationLevel {
-    #[must_use]
+	#[must_use]
 	pub fn to_credential_types(&self) -> Vec<CredentialType> {
 		match self {
 			Self::Orb => vec![CredentialType::Orb],
