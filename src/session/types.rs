@@ -34,6 +34,16 @@ impl Display for VerificationLevel {
 	}
 }
 
+impl VerificationLevel {
+	#[must_use]
+	pub fn to_credential_types(&self) -> Vec<CredentialType> {
+		match self {
+			Self::Orb => vec![CredentialType::Orb],
+			Self::Device => vec![CredentialType::Orb, CredentialType::Device],
+		}
+	}
+}
+
 /// The error returned by the World App.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize, thiserror::Error)]
 #[serde(rename_all = "snake_case")]
