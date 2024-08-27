@@ -3,6 +3,7 @@ use ring::{
 	rand::{SecureRandom, SystemRandom},
 };
 use serde_json::json;
+use types::BridgeProof;
 use url::Url;
 use uuid::Uuid;
 
@@ -48,7 +49,7 @@ struct BridgePollResponse {
 #[serde(untagged)]
 enum BridgeResponse {
 	Error { error_code: AppError },
-	Success(Proof),
+	Success(BridgeProof),
 }
 
 /// A session with the Wallet Bridge.
@@ -84,7 +85,7 @@ impl Session {
 	///
 	/// Returns an error if the request to the bridge fails, or if the response from the bridge is malformed.
 	pub async fn new<V: alloy_sol_types::SolValue + Send>(
-		app_id: AppId,
+		app_id: &AppId,
 		action: &str,
 		verification_level: VerificationLevel,
 		bridge_url: BridgeUrl,
@@ -181,8 +182,8 @@ impl Session {
 		}
 
 		match self.decrypt_response(&response.response.unwrap_or_else(|| unreachable!()))? {
-			BridgeResponse::Success(proof) => Ok(Status::Confirmed(proof)),
 			BridgeResponse::Error { error_code } => Ok(Status::Failed(error_code)),
+			BridgeResponse::Success(proof) => Ok(Status::Confirmed(proof.into())),
 		}
 	}
 

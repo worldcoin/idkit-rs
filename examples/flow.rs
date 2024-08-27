@@ -1,5 +1,8 @@
 use console::{Style, Term};
-use idkit::session::{AppId, BridgeUrl, Status, VerificationLevel};
+use idkit::{
+	session::{AppId, BridgeUrl, Status, VerificationLevel},
+	verify_proof,
+};
 use indicatif::ProgressBar;
 use qrcode::{render::unicode, QrCode};
 use std::{str::FromStr, time::Duration};
@@ -10,12 +13,14 @@ async fn main() {
 	let term = Term::stdout();
 	term.clear_screen().unwrap();
 
+	let app_id = AppId::from_str("app_ce4cb73cb75fc3b73b71ffb4de178410").unwrap();
+
 	let session = idkit::Session::new(
-		AppId::from_str("app_ce4cb73cb75fc3b73b71ffb4de178410").unwrap(),
+		&app_id,
 		"test-action",
 		VerificationLevel::Orb,
 		BridgeUrl::default(),
-		(),
+		"",
 		None,
 	)
 	.await
@@ -62,8 +67,8 @@ async fn main() {
 	term.write_line("\n").unwrap();
 	term.write_line(&format!(
 		"{} {:?}",
-		header_style.apply_to("Credential Type:"),
-		proof.credential_type,
+		header_style.apply_to("Verification Level:"),
+		proof.verification_level,
 	))
 	.unwrap();
 
@@ -87,4 +92,26 @@ async fn main() {
 		proof.proof
 	))
 	.unwrap();
+
+	match verify_proof(proof, app_id, "test-action", "").await {
+		Ok(()) => {
+			term.write_line("\n").unwrap();
+			term.write_line(&format!(
+				"{}",
+				Style::new().bold().green().apply_to("Proof verified!")
+			))
+			.unwrap();
+		},
+		Err(error) => {
+			term.write_line("\n").unwrap();
+			term.write_line(&format!(
+				"{}",
+				Style::new()
+					.bold()
+					.red()
+					.apply_to(format!("Proof verification failed: {error}")),
+			))
+			.unwrap();
+		},
+	}
 }

@@ -2,9 +2,11 @@
 
 pub mod hashing;
 pub mod session;
+pub mod verify;
 
-use session::CredentialType;
 pub use session::Session;
+use session::VerificationLevel;
+pub use verify::verify_proof;
 
 /// The proof of verification returned by the World ID protocol.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -15,6 +17,6 @@ pub struct Proof {
 	pub merkle_root: String,
 	/// Essentially the user's unique identifier for your app (and specific action if using Incognito Actions). A hex string, ABI encoded.
 	pub nullifier_hash: String,
-	/// Either orb or device. Will always return the strongest credential with which a user has been verified.
-	pub credential_type: CredentialType,
+	/// Either orb or device.
+	pub verification_level: VerificationLevel,
 }

@@ -1,6 +1,8 @@
 use std::{fmt::Display, ops::Deref, str::FromStr};
 use url::Url;
 
+use crate::Proof;
+
 const DEFAULT_BRIDGE_URL: &str = "https://bridge.worldcoin.org";
 
 /// The strongest credential with which a user has been verified.
@@ -9,6 +11,15 @@ const DEFAULT_BRIDGE_URL: &str = "https://bridge.worldcoin.org";
 pub enum CredentialType {
 	Orb,
 	Device,
+}
+
+impl From<CredentialType> for VerificationLevel {
+	fn from(val: CredentialType) -> Self {
+		match val {
+			CredentialType::Orb => Self::Orb,
+			CredentialType::Device => Self::Device,
+		}
+	}
 }
 
 /// The minimum verification level accepted.
@@ -89,7 +100,7 @@ pub enum AppError {
 
 /// Unique identifier for the app verifying the action. This should be the App ID obtained from the [Developer Portal](https://developer.worldcoin.org).
 #[repr(transparent)]
-#[derive(Debug, serde::Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, serde::Serialize, PartialEq, Eq)]
 pub struct AppId(pub(crate) String);
 
 /// Error returned when an invalid app id is provided.
@@ -102,6 +113,16 @@ impl AppId {
 	#[must_use]
 	pub fn is_staging(&self) -> bool {
 		self.0.contains("staging")
+	}
+
+	/// Create a new app id from a string, bypasing the validation.
+	///
+	/// # Safety
+	///
+	/// The string must be a valid app id.
+	#[must_use]
+	pub const unsafe fn new_unchecked(app_id: String) -> Self {
+		Self(app_id)
 	}
 }
 
@@ -191,6 +212,30 @@ impl TryFrom<Url> for BridgeUrl {
 		}
 
 		Ok(Self(url))
+	}
+}
+
+/// The proof of verification returned by the World ID Bridge.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct BridgeProof {
+	/// The Zero-knowledge proof of the verification. A hex string, ABI encoded.
+	pub proof: String,
+	/// The hash pointer to the root of the Merkle tree that proves membership of the user's identity in the list of identities verified by the Orb. A hex string, ABI encoded.
+	pub merkle_root: String,
+	/// Essentially the user's unique identifier for your app (and specific action if using Incognito Actions). A hex string, ABI encoded.
+	pub nullifier_hash: String,
+	/// Either orb or device.
+	pub credential_type: CredentialType,
+}
+
+impl From<BridgeProof> for Proof {
+	fn from(val: BridgeProof) -> Self {
+		Self {
+			proof: val.proof,
+			merkle_root: val.merkle_root,
+			nullifier_hash: val.nullifier_hash,
+			verification_level: val.credential_type.into(),
+		}
 	}
 }
 
