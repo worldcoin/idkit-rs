@@ -10,6 +10,8 @@ const DEFAULT_BRIDGE_URL: &str = "https://bridge.worldcoin.org";
 #[serde(rename_all = "lowercase")]
 pub enum CredentialType {
 	Orb,
+	SecureDocument,
+	Document,
 	Device,
 }
 
@@ -17,6 +19,8 @@ impl From<CredentialType> for VerificationLevel {
 	fn from(val: CredentialType) -> Self {
 		match val {
 			CredentialType::Orb => Self::Orb,
+			CredentialType::SecureDocument => Self::SecureDocument,
+			CredentialType::Document => Self::Document,
 			CredentialType::Device => Self::Device,
 		}
 	}
@@ -27,6 +31,8 @@ impl From<CredentialType> for VerificationLevel {
 #[serde(rename_all = "lowercase")]
 pub enum VerificationLevel {
 	Orb,
+	SecureDocument,
+	Document,
 	Device,
 }
 
@@ -40,6 +46,8 @@ impl Display for VerificationLevel {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			Self::Orb => write!(f, "orb"),
+			Self::SecureDocument => write!(f, "secure_document"),
+			Self::Document => write!(f, "document"),
 			Self::Device => write!(f, "device"),
 		}
 	}
@@ -50,6 +58,12 @@ impl VerificationLevel {
 	pub fn to_credential_types(&self) -> Vec<CredentialType> {
 		match self {
 			Self::Orb => vec![CredentialType::Orb],
+			Self::SecureDocument => vec![CredentialType::Orb, CredentialType::SecureDocument],
+			Self::Document => vec![
+				CredentialType::Document,
+				CredentialType::SecureDocument,
+				CredentialType::Orb,
+			],
 			Self::Device => vec![CredentialType::Orb, CredentialType::Device],
 		}
 	}
