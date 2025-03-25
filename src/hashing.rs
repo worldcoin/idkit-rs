@@ -48,7 +48,11 @@ mod tests {
 			.unwrap()
 		);
 		assert_eq!(
-			format!("0x{:x}", hash_to_field(b"test")),
+			format!("0x{:064x}", hash_to_field(b"hello world")),
+			"0x0047173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01f"
+		);
+		assert_eq!(
+			format!("0x{:064x}", hash_to_field(b"test")),
 			"0x009c22ff5f21f0b81b113e63f7db6da94fedef11b2119b4088b89664fb9a3cb6"
 		);
 	}
@@ -56,15 +60,15 @@ mod tests {
 	#[test]
 	fn test_encode_signal() {
 		assert_eq!(
-			format!("0x{:x}", encode_signal(&"test")),
+			format!("0x{:064x}", encode_signal(&"test")),
 			"0x009c22ff5f21f0b81b113e63f7db6da94fedef11b2119b4088b89664fb9a3cb6"
 		);
 		assert_eq!(
-			format!("0x{:x}", encode_signal(&(U256::from(1), "test"))),
+			format!("0x{:064x}", encode_signal(&(U256::from(1), "test"))),
 			"0x0088c8c90482320f18b0c0842feaeab88065fd7ef3ef7b06066af823d8eef6f9"
 		);
 		assert_eq!(
-			format!("0x{:x}", encode_signal::<()>(&())),
+			format!("0x{:064x}", encode_signal::<()>(&())),
 			"0x00c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a4"
 		);
 	}

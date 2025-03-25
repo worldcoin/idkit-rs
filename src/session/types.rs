@@ -11,6 +11,8 @@ const DEFAULT_BRIDGE_URL: &str = "https://bridge.worldcoin.org";
 pub enum CredentialType {
 	Orb,
 	Device,
+	Document,
+	SecureDocument,
 }
 
 impl From<CredentialType> for VerificationLevel {
@@ -18,6 +20,8 @@ impl From<CredentialType> for VerificationLevel {
 		match val {
 			CredentialType::Orb => Self::Orb,
 			CredentialType::Device => Self::Device,
+			CredentialType::Document => Self::Document,
+			CredentialType::SecureDocument => Self::SecureDocument,
 		}
 	}
 }
@@ -28,6 +32,8 @@ impl From<CredentialType> for VerificationLevel {
 pub enum VerificationLevel {
 	Orb,
 	Device,
+	Document,
+	SecureDocument,
 }
 
 impl Default for VerificationLevel {
@@ -41,6 +47,8 @@ impl Display for VerificationLevel {
 		match self {
 			Self::Orb => write!(f, "orb"),
 			Self::Device => write!(f, "device"),
+			Self::Document => write!(f, "document"),
+			Self::SecureDocument => write!(f, "secure_document"),
 		}
 	}
 }
@@ -51,6 +59,12 @@ impl VerificationLevel {
 		match self {
 			Self::Orb => vec![CredentialType::Orb],
 			Self::Device => vec![CredentialType::Orb, CredentialType::Device],
+			Self::SecureDocument => vec![CredentialType::Orb, CredentialType::SecureDocument],
+			Self::Document => vec![
+				CredentialType::Orb,
+				CredentialType::Document,
+				CredentialType::SecureDocument,
+			],
 		}
 	}
 }
