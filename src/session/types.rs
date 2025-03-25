@@ -63,7 +63,7 @@ impl VerificationLevel {
 			Self::Document => vec![
 				CredentialType::Orb,
 				CredentialType::Document,
-				CredentialType::SecureDocument
+				CredentialType::SecureDocument,
 			],
 		}
 	}
