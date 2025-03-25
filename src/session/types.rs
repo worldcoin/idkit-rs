@@ -60,7 +60,11 @@ impl VerificationLevel {
 			Self::Orb => vec![CredentialType::Orb],
 			Self::Device => vec![CredentialType::Orb, CredentialType::Device],
 			Self::SecureDocument => vec![CredentialType::Orb, CredentialType::SecureDocument],
-			Self::Document => vec![CredentialType::Orb, CredentialType::Document, CredentialType::SecureDocument],
+			Self::Document => vec![
+				CredentialType::Orb,
+				CredentialType::Document,
+				CredentialType::SecureDocument
+			],
 		}
 	}
 }
